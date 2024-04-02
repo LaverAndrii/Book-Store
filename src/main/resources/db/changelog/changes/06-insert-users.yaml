@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users
+      author: andriilaver
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "user@mate.academy" }
+              - column: { name: password, value: "$2a$10$hEvndB2LGJ3l.1ki0Cy3sO9FWoXm2EXEaxZqkjp7mTpL4cTNXHKZW" }
+              - column: { name: first_name, value: "Danylo" }
+              - column: { name: last_name, value: "Yaremko" }
+              - column: { name: shipping_address, value: "Lukasha 1" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "admin@mate.academy" }
+              - column: { name: password, value: "$2a$10$jFFXSQ1S0q0tyug8.85I9.FcElLACAcsIUHmqEjygWQpmMRhqlpJW" }
+              - column: { name: first_name, value: "Andrii" }
+              - column: { name: last_name, value: "Laver" }
+              - column: { name: shipping_address, value: "Lukasha 1" }

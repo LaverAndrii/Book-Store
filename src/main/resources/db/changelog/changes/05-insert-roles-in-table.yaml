@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-roles
+      author: andriilaver
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: 'USER'
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: 'ADMIN'
+      rollback:
+        - sql:
+            sql: SET FOREIGN_KEY_CHECKS = 0;
+              TRUNCATE users_roles;
+              TRUNCATE roles;
+              SET FOREIGN_KEY_CHECKS = 1;
