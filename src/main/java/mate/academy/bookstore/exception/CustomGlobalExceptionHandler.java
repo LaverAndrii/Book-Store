@@ -38,7 +38,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         if (e instanceof FieldError fieldError) {
             String field = fieldError.getField();
             String message = e.getDefaultMessage();
-            return field + " " + message;
+            return field + ": " + message;
         }
         return e.getDefaultMessage();
     }
@@ -48,4 +48,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }
