@@ -26,10 +26,6 @@ public class Role implements GrantedAuthority {
     @Enumerated(EnumType.STRING)
     private RoleName name;
 
-    public Role(Long id) {
-        this.id = id;
-    }
-
     @Override
     public String getAuthority() {
         return name.toString();

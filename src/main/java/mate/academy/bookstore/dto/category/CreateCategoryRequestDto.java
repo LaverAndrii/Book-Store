@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class CreateCategoryRequestDto {
-    @NotBlank(message = "Category should be valid")
+    @NotBlank(message = "Category should not be blank")
     private String name;
     private String description;
 }
