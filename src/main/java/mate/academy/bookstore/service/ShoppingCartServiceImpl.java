@@ -8,8 +8,10 @@ import mate.academy.bookstore.exception.EntityNotFoundException;
 import mate.academy.bookstore.mapper.ShoppingCartMapper;
 import mate.academy.bookstore.model.CartItem;
 import mate.academy.bookstore.model.ShoppingCart;
+import mate.academy.bookstore.model.User;
 import mate.academy.bookstore.repository.cartitem.CartItemRepository;
 import mate.academy.bookstore.repository.shoppingcart.ShoppingCartRepository;
+import mate.academy.bookstore.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +21,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemService cartItemService;
     private final CartItemRepository cartItemRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ShoppingCartDto getShoppingCart(String email) {
@@ -38,28 +41,32 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             Long cartId,
             UpdateItemsQuantityDto updateQuantityDto,
             String email) {
-        if (checkUser(cartId, email)) {
-            cartItemService.updateQuantity(cartId, updateQuantityDto.quantity());
-            return shoppingCartMapper.toDto(getShoppingCartByEmail(email));
+        if (!checkItemUser(cartId, email)) {
+            throw new EntityNotFoundException("There is no such item in the shopping cart");
         }
-        throw new EntityNotFoundException("There is no such item in the shopping cart");
+        cartItemService.updateQuantity(cartId, updateQuantityDto.quantity());
+        return shoppingCartMapper.toDto(getShoppingCartByEmail(email));
     }
 
     @Override
     public ShoppingCartDto removeBook(Long cartId, String email) {
-        if (checkUser(cartId, email)) {
-            cartItemRepository.deleteById(cartId);
-            return getShoppingCart(email);
+        if (!checkItemUser(cartId, email)) {
+            throw new EntityNotFoundException("There is no such item in the shopping cart");
         }
-        throw new EntityNotFoundException("There is no such item in the shopping cart");
+        cartItemRepository.deleteById(cartId);
+        return getShoppingCart(email);
     }
 
     private ShoppingCart getShoppingCartByEmail(String email) {
-        return shoppingCartRepository.findByUserEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("Can't find shopping cart by email " + email));
+        return shoppingCartRepository.findByUserEmail(email).orElseGet(() -> {
+            User user = userRepository.findByEmail(email).orElseThrow(
+                    () -> new EntityNotFoundException("Can't find user with email " + email));
+            return shoppingCartRepository.save(new ShoppingCart(user));
+        });
+
     }
 
-    private boolean checkUser(Long cartId, String email) {
+    private boolean checkItemUser(Long cartId, String email) {
         CartItem cartItem = cartItemService.getById(cartId);
         return cartItem.getShoppingCart().getUser().getEmail().equals(email);
     }

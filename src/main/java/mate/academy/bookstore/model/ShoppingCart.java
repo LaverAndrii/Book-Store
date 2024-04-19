@@ -11,6 +11,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Set;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -18,6 +19,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @SQLDelete(sql = "UPDATE shopping_carts SET is_deleted = true WHERE id = ?")
 @SQLRestriction(value = "is_deleted = false")
 @Table(name = "shopping_carts")
@@ -32,4 +34,8 @@ public class ShoppingCart {
     private Set<CartItem> cartItems;
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    public ShoppingCart(User user) {
+        this.user = user;
+    }
 }
