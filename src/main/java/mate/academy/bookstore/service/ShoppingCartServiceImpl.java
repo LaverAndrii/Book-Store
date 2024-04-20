@@ -13,6 +13,7 @@ import mate.academy.bookstore.repository.cartitem.CartItemRepository;
 import mate.academy.bookstore.repository.shoppingcart.ShoppingCartRepository;
 import mate.academy.bookstore.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +24,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public ShoppingCartDto getShoppingCart(String email) {
         return shoppingCartMapper.toDto(getShoppingCartByEmail(email));
     }
 
+    @Transactional
     @Override
     public ShoppingCartDto addBook(AddCartItemDto addCartItemDto, String email) {
         ShoppingCart shoppingCart = getShoppingCartByEmail(email);
@@ -36,6 +39,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(shoppingCartRepository.save(shoppingCart));
     }
 
+    @Transactional
     @Override
     public ShoppingCartDto updateCartItem(
             Long cartId,
@@ -48,6 +52,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toDto(getShoppingCartByEmail(email));
     }
 
+    @Transactional
     @Override
     public ShoppingCartDto removeBook(Long cartId, String email) {
         if (!checkItemUser(cartId, email)) {

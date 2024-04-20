@@ -33,16 +33,14 @@ public class ShoppingCartController {
     public ShoppingCartDto addToCart(
             @RequestBody AddCartItemDto addCartItemDto,
             Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.addBook(addCartItemDto, user.getEmail());
+        return shoppingCartService.addBook(addCartItemDto, getUserEmail(authentication));
     }
 
     @Operation(summary = "Get a shopping cart", description = "Get a shopping cart")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     public ShoppingCartDto getCart(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.getShoppingCart(user.getEmail());
+        return shoppingCartService.getShoppingCart(getUserEmail(authentication));
     }
 
     @Operation(summary = "Update cart item", description = "Update quantity of cart item")
@@ -52,8 +50,10 @@ public class ShoppingCartController {
             Authentication authentication,
             @PathVariable Long cartItemId,
             @RequestBody @Valid UpdateItemsQuantityDto updateQuantityDto) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.updateCartItem(cartItemId, updateQuantityDto, user.getEmail());
+        return shoppingCartService.updateCartItem(
+                cartItemId,
+                updateQuantityDto,
+                getUserEmail(authentication));
     }
 
     @Operation(summary = "Remove cart item", description = "Remove cart item from shopping cart")
@@ -62,8 +62,11 @@ public class ShoppingCartController {
     public ShoppingCartDto removeFromCart(
             @PathVariable Long cartItemId,
             Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return shoppingCartService.removeBook(cartItemId, user.getEmail());
+        return shoppingCartService.removeBook(cartItemId, getUserEmail(authentication));
     }
 
+    private String getUserEmail(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return user.getEmail();
+    }
 }
