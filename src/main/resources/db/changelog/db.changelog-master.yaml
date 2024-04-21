@@ -19,3 +19,9 @@ databaseChangeLog:
       file: /db/changelog/changes/09-create-books-categories-table.yaml
   - include:
       file: /db/changelog/changes/10-insert-role-user-for-admin.yaml
+  - include:
+      file: /db/changelog/changes/11-create-shopping-cart-table.yaml
+  - include:
+      file: /db/changelog/changes/12-create-cart-item-table.yaml
+  - include:
+      file: /db/changelog/changes/13-insert-shopping-carts.yaml
