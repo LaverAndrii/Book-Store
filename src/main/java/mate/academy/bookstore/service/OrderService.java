@@ -5,11 +5,12 @@ import mate.academy.bookstore.dto.order.OrderDto;
 import mate.academy.bookstore.dto.order.PlaceOrderDto;
 import mate.academy.bookstore.dto.order.UpdateOrderStatusDto;
 import mate.academy.bookstore.dto.orderitem.OrderItemDto;
+import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
-    OrderDto placeOrder(PlaceOrderDto placeOrderDto);
+    OrderDto placeOrder(PlaceOrderDto placeOrderDto, String email);
 
-    List<OrderDto> getAll(String email);
+    List<OrderDto> getAll(Pageable pageable, String email);
 
     List<OrderItemDto> getOrderItems(Long orderId);
 
