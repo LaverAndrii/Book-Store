@@ -10,11 +10,13 @@ import mate.academy.bookstore.model.Book;
 import mate.academy.bookstore.model.Category;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
+    @Mapping(target = "categoryIds", ignore = true)
     BookDto toDto(Book book);
 
     Book toModel(CreateBookRequestDto requestDto);
