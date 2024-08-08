@@ -1,6 +1,7 @@
 package mate.academy.bookstore.service;
 
 import lombok.RequiredArgsConstructor;
+import mate.academy.bookstore.dto.book.BookDto;
 import mate.academy.bookstore.dto.cartitem.AddCartItemDto;
 import mate.academy.bookstore.dto.cartitem.UpdateItemsQuantityDto;
 import mate.academy.bookstore.dto.shoppingcart.ShoppingCartDto;
@@ -23,6 +24,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemService cartItemService;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
+    private final BookService bookService;
 
     @Transactional
     @Override
@@ -35,6 +37,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCartDto addBook(AddCartItemDto addCartItemDto, String email) {
         ShoppingCart shoppingCart = getShoppingCartByEmail(email);
         CartItem cartItem = cartItemService.save(addCartItemDto, shoppingCart);
+        BookDto byId = bookService.findById(addCartItemDto.getBookId());
+        cartItem.getBook().setTitle(byId.getTitle());
         shoppingCart.getCartItems().add(cartItem);
         return shoppingCartMapper.toDto(shoppingCartRepository.save(shoppingCart));
     }
